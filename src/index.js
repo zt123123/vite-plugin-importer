@@ -23,7 +23,6 @@ function usePluginImport(options) {
   return {
     name: 'vite-plugin-importer-next',
     transform(code, id) {
-      console.log(111, id);
       if (/\.(?:[jt]sx?|vue)$/.test(id) && !/node_modules\/vite/.test(id)) {
         const plugins = [importMeta, [babelImport, options]]
         const result = babel.transformSync(code, {
