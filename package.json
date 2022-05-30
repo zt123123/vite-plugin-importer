@@ -1,10 +1,10 @@
 {
-  "name": "vite-plugin-importer",
-  "version": "0.2.5",
+  "name": "vite-plugin-importer-next",
+  "version": "0.1.0",
   "main": "src/index.js",
   "description": "Integration for babel-plugin-import",
-  "author": "ajuner",
-  "homepage": "https://github.com/ajuner/vite-plugin-importer",
+  "author": "zt123123",
+  "homepage": "https://github.com/zt123123/vite-plugin-importer",
   "keywords": [
     "babel-plugin-import",
     "vite"
@@ -13,12 +13,15 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ajuner/vite-plugin-importer",
+    "url": "https://github.com/zt123123/vite-plugin-importer",
     "branch": "main"
   },
   "dependencies": {
     "@babel/core": "^7.12.17",
     "@babel/plugin-syntax-import-meta": "^7.10.4",
-    "babel-plugin-import": "^1.13.3"
+    "babel-plugin-import": "^1.13.3",
+    "find-pkg": "^2.0.0",
+    "gensync": "^1.0.0-beta.2",
+    "json5": "^2.2.1"
   }
 }

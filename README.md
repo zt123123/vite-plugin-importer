@@ -1,26 +1,33 @@
-# vite-plugin-importer
+# vite-plugin-importer-next
 
-[![NPM version](https://img.shields.io/npm/v/vite-plugin-importer.svg)](https://npmjs.org/package//vite-plugin-importer)
-[![NPM Downloads](https://img.shields.io/npm/dm/vite-plugin-importer.svg)](https://npmjs.org/package//vite-plugin-importer)
+> fork from [vite-plugin-importer](https://github.com/ajuner/vite-plugin-importer), the only diffrent is that this module support parsing babel configuration automatically.
 
-Integration for babel-plugin-import
+[![NPM version](https://img.shields.io/npm/v/vite-plugin-importer-next.svg)](https://npmjs.org/package//vite-plugin-importer-next)
+[![NPM Downloads](https://img.shields.io/npm/dm/vite-plugin-importer-next.svg)](https://npmjs.org/package//vite-plugin-importer-next)
+
+
+## features
+- Lookup babel config automatically
+- Integration for babel-plugin-import
 
 ## use
 
 config same as [babel-plugin-import](https://github.com/ant-design/babel-plugin-import)
 
 ```
-npm install vite-plugin-importer --save
-yarn add vite-plugin-importer
+npm install vite-plugin-importer-next --save
+yarn add vite-plugin-importer-next
 ```
 
 ```js
 // vite.config.js
 import { defineConfig } from "vite";
-import usePluginImport from 'vite-plugin-importer'
+import usePluginImport from 'vite-plugin-importer-next'
 export default defineConfig({
   plugins: [
     ... // other plugins
+    // if not pass param, it will lookup babel config of project root
+    usePluginImport(),
     usePluginImport({
       libraryName: "ant-design-vue",
       libraryDirectory: "es",
