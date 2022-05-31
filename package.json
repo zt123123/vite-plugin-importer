@@ -10,7 +10,7 @@
     "babel-plugin-component",
     "vite-plugin-importer",
     "vite-plugin-style-import",
-    "vite",
+    "vite"
   ],
   "private": false,
   "license": "MIT",
