@@ -1,19 +1,17 @@
-const babel = require('@babel/core')
 const path = require("path")
 const url = require("url")
-const gensync = require("gensync");
 
 let import_;
 
 try {
-  import_ = gensync(function* (filepath) {
-    return yield* import(filepath)
-  })
+  import_ = function (filepath) {
+    return import(filepath)
+  }
 } catch (error) {
   console.log('error:', error);
 }
 
-function* loadCjsOrMjsDefault(filepath) {
+async function loadCjsOrMjsDefault(filepath) {
   switch (guessJSModuleType(filepath)) {
     case "cjs":
       return loadCjsDefault(filepath);
@@ -27,7 +25,7 @@ function* loadCjsOrMjsDefault(filepath) {
 
     case "mjs":
       try {
-        return yield* loadMjsDefault(filepath);
+        return await loadMjsDefault(filepath);
       } catch (error) {
         throw new Error(error)
       }
@@ -61,12 +59,12 @@ function loadMjsDefault() {
   return _loadMjsDefault.apply(this, arguments);
 }
 
-function _loadMjsDefault(filepath) {
+async function _loadMjsDefault(filepath) {
   if (!import_) {
     throw new Error("Internal error: Native ECMAScript modules aren't supported" + " by this platform.\n");
   }
 
-  const module = import_(url.pathToFileURL(filepath));
+  const module = await import_(url.pathToFileURL(filepath));
   return module.default;
 }
 

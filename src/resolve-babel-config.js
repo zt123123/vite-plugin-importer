@@ -2,7 +2,6 @@ const packageDirectory = require("find-pkg")
 const path = require("path")
 const fs = require("fs")
 const json = require("json5")
-const gensync = require("gensync");
 const loadCjsOrMjsDefault = require("./module-types.js")
 
 const ROOT_CONFIG_FILENAMES = ["babel.config.js", "babel.config.cjs", "babel.config.mjs", "babel.config.json"];
@@ -42,14 +41,14 @@ function readConfigJSON5(filepath) {
   };
 }
 
-function* readConfigJS(filepath) {
+async function readConfigJS(filepath) {
   if (!fs.existsSync(filepath)) {
     return null;
   }
   let options;
 
   try {
-    options = yield* loadCjsOrMjsDefault(filepath);
+    options = await loadCjsOrMjsDefault(filepath);
   } catch (err) {
     err.message = `${filepath}: Error while loading config - ${err.message}`;
     throw err;
@@ -70,9 +69,9 @@ function* readConfigJS(filepath) {
   };
 }
 
-function* readConfig(filepath) {
+async function readConfig(filepath) {
   const ext = path.extname(filepath);
-  return ext === ".js" || ext === ".cjs" || ext === ".mjs" ? yield* readConfigJS(filepath) : readConfigJSON5(filepath);
+  return ext === ".js" || ext === ".cjs" || ext === ".mjs" ? await readConfigJS(filepath) : readConfigJSON5(filepath);
 }
 
 
@@ -108,8 +107,8 @@ function packageToBabelConfig(file) {
   };
 }
 
-const loadOneConfig = gensync(function* (names, dirname, previousConfig = null) {
-  const configs = yield* gensync.all(names.map(filename => readConfig(path.join(dirname, filename))));
+async function loadOneConfig(names, dirname, previousConfig = null) {
+  const configs = await Promise.all(names.map(filename => readConfig(path.join(dirname, filename))));
   const config = configs.reduce((previousConfig, config) => {
     if (config && previousConfig) {
       throw new Error(`Multiple configuration files found. Please remove one:\n` + ` - ${path.basename(previousConfig.filepath)}\n` + ` - ${config.filepath}\n` + `from ${dirname}`);
@@ -118,14 +117,14 @@ const loadOneConfig = gensync(function* (names, dirname, previousConfig = null) 
     return config || previousConfig;
   }, previousConfig);
   return config;
-})
+}
 
-function findRelativeConfig(packageData) {
+async function findRelativeConfig(packageData) {
   let config = null;
 
   for (const loc of packageData.directories) {
     if (!config) {
-      config = loadOneConfig.sync(RELATIVE_CONFIG_FILENAMES, loc, packageToBabelConfig(packageData.pkg));
+      config = await loadOneConfig(RELATIVE_CONFIG_FILENAMES, loc, packageToBabelConfig(packageData.pkg));
     }
   }
   if (!config) {
@@ -137,8 +136,8 @@ function findRelativeConfig(packageData) {
   };
 }
 
-function findRootConfig(dirname) {
-  return loadOneConfig.sync(ROOT_CONFIG_FILENAMES, dirname);
+async function findRootConfig(dirname) {
+  return await loadOneConfig(ROOT_CONFIG_FILENAMES, dirname);
 }
 
 function formatConfig(finalConfig) {
@@ -156,7 +155,7 @@ function formatConfig(finalConfig) {
  * find user config of babel
  * reference to // https://github.com/babel/babel/blob/main/packages/babel-core/src/config/files/configuration.ts
  */
-const resolveBabelConfig = gensync(function* (options = {}) {
+async function resolveBabelConfig(options = {}) {
   const {
     cwd = ".",
     root: rootDir = ".",
@@ -168,8 +167,8 @@ const resolveBabelConfig = gensync(function* (options = {}) {
     root: absoluteRootDir,
   };
   const packageData = findPackageData()
-  const rootBabelConfig = findRootConfig(context.root)
-  const relativeBabelConfig = findRelativeConfig(packageData)
+  const rootBabelConfig = await findRootConfig(context.root)
+  const relativeBabelConfig = await findRelativeConfig(packageData)
   const finalConfig = []
   if (rootBabelConfig) {
     finalConfig.push(rootBabelConfig)
@@ -178,12 +177,11 @@ const resolveBabelConfig = gensync(function* (options = {}) {
     finalConfig.push(relativeBabelConfig)
   }
   return formatConfig(finalConfig)
-})
+}
 
 process.on("unhandledRejection", e => {
   console.log('error:', e);
 })
-resolveBabelConfig.sync()
 
 module.exports = resolveBabelConfig
 

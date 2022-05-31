@@ -9,10 +9,9 @@ const resolveBabelConfig = require('./resolve-babel-config.js')
 // babel-plugin-component
 const pluginList = ['import', 'component']
 
-function usePluginImport(options) {
-  let pluginName = ''
+async function getOptions(options) {
   if (!options) {
-    const { plugins = [] } = resolveBabelConfig.sync()
+    const { plugins = [] } = await resolveBabelConfig()
     const importConfig = plugins.find(plugin => {
       if (typeof plugin === "string") {
         return pluginList.includes(plugin)
@@ -20,18 +19,26 @@ function usePluginImport(options) {
         return pluginList.includes(plugin[0])
       }
     })
-    pluginName = importConfig && importConfig[0]
-    options = importConfig && importConfig[1]
+    options = importConfig || []
   }
-  if (!options) {
-    throw new Error('options must be an object!!!')
+  return function (name) {
+    return name === 'pluginName' ? options[0] : options[1]
   }
+}
 
+function usePluginImport(options) {
   return {
     name: 'vite-plugin-importer-next',
-    transform(code, id) {
+    async transform(code, id) {
+      const handleOptions = await getOptions(options)
+      const pluginName = handleOptions('pluginName')
+      const pluginConfig = handleOptions('pluginConfig')
+      if (!pluginConfig) {
+        throw new Error('options must be an object!!!')
+      }
+
       if (/\.(?:[jt]sx?|vue)$/.test(id) && !/node_modules\/vite/.test(id)) {
-        const plugins = [importMeta, [pluginName === "import" ? babelImport : babelComponent, options]]
+        const plugins = [importMeta, [pluginName === "import" ? babelImport : babelComponent, pluginConfig]]
         const result = babel.transformSync(code, {
           ast: true,
           plugins,
