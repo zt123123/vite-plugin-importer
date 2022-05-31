@@ -27,6 +27,8 @@ export default defineConfig({
   plugins: [
     ... // other plugins
     // if not pass param, it will lookup babel config of project root
+    // babel.config.js、babel.config.cjs、babel.config.mjs、babel.config.json
+    // package.json、 .babelrc、.babelrc.js、.babelrc.cjs、.babelrc.mjs、.babelrc.json
     usePluginImport(),
     usePluginImport({
       libraryName: "ant-design-vue",
@@ -57,15 +59,15 @@ export default defineConfig({
 
 or in a .babelrc config
 ```json
-{
-  "plugins": [
-    // other plugins...
-    ["import", {
-      "libraryName": "element-ui,
-      "style": true,
-    ]
+"plugins": [
+  [
+    "import",
+    {
+      "libraryName": "element-ui",
+      "style": true
+    }
   ]
-}
+]
 ```
 
 ## LICENSE

@@ -16,6 +16,17 @@
     "url": "https://github.com/zt123123/vite-plugin-importer",
     "branch": "main"
   },
+  "babel": {
+    "plugins": [
+      [
+        "import",
+        {
+          "libraryName": "element-ui",
+          "style": true
+        }
+      ]
+    ]
+  },
   "dependencies": {
     "@babel/core": "^7.12.17",
     "@babel/plugin-syntax-import-meta": "^7.10.4",
