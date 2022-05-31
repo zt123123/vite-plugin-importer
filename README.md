@@ -8,11 +8,11 @@
 
 ## features
 - Lookup babel config automatically
-- Integration for babel-plugin-import
+- Integration for babel-plugin-import/babel-plugin-component
 
 ## use
 
-config same as [babel-plugin-import](https://github.com/ant-design/babel-plugin-import)
+config same as [babel-plugin-import](https://github.com/ant-design/babel-plugin-import) & [babel-plugin-component](https://github.com/ElementUI/babel-plugin-component)
 
 ```
 npm install vite-plugin-importer-next --save
@@ -53,6 +53,16 @@ export default defineConfig({
   ];
 })
 
+```
+
+or in a .babelrc config
+```json
+{
+  ['import', {
+    libraryName: 'element-ui',
+    style: true,
+  ]
+}
 ```
 
 ## LICENSE
