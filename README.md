@@ -58,9 +58,12 @@ export default defineConfig({
 or in a .babelrc config
 ```json
 {
-  ['import', {
-    libraryName: 'element-ui',
-    style: true,
+  "plugins": [
+    // other plugins...
+    ["import", {
+      "libraryName": "element-ui,
+      "style": true,
+    ]
   ]
 }
 ```
