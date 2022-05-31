@@ -1,13 +1,16 @@
 {
   "name": "vite-plugin-importer-next",
-  "version": "0.2.0",
+  "version": "0.2.2",
   "main": "src/index.js",
   "description": "Integration for babel-plugin-import",
   "author": "zt123123",
   "homepage": "https://github.com/zt123123/vite-plugin-importer",
   "keywords": [
     "babel-plugin-import",
-    "vite"
+    "babel-plugin-component",
+    "vite-plugin-importer",
+    "vite-plugin-style-import",
+    "vite",
   ],
   "private": false,
   "license": "MIT",
